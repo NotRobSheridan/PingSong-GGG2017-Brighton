@@ -16,16 +16,25 @@ public class PaddleMovement : MonoBehaviour {
         if (Input.GetKeyDown("space"))
             goLeft = !goLeft;
 
-        if (thisPaddle.position.x <= leftMost)
+        /*if (thisPaddle.position.x <= leftMost)
             goLeft = !goLeft;
 
         if (thisPaddle.position.x >= rightMost)
             goLeft = !goLeft;
-
+            */
         if (goLeft)
             thisPaddle.Translate(-Vector2.right * speed * Time.deltaTime);
         else
             thisPaddle.Translate(Vector2.right * speed * Time.deltaTime);
+
+    }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.name == "LeftWall")
+            goLeft = !goLeft;
+        if (col.gameObject.name == "RightWall")
+            goLeft = !goLeft;
 
     }
 
