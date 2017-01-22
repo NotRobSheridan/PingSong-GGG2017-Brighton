@@ -9,19 +9,11 @@ public class PaddleMovement : MonoBehaviour {
     public float leftMost = -3.5f;
     public float rightMost = 3.5f;
 
-	
-	// Update is called once per frame
-	void Update () {
+		void Update () {
 
         if (Input.GetKeyDown("space"))
             goLeft = !goLeft;
 
-        /*if (thisPaddle.position.x <= leftMost)
-            goLeft = !goLeft;
-
-        if (thisPaddle.position.x >= rightMost)
-            goLeft = !goLeft;
-            */
         if (goLeft)
             thisPaddle.Translate(-Vector2.right * speed * Time.deltaTime);
         else
@@ -35,8 +27,11 @@ public class PaddleMovement : MonoBehaviour {
             goLeft = !goLeft;
         if (col.gameObject.name == "RightWall")
             goLeft = !goLeft;
+        if (col.gameObject.name == "Ball")
+        {
+            AudioSource audio = GetComponent<AudioSource>();
+            audio.Play();
+        }
 
     }
-
-
 }

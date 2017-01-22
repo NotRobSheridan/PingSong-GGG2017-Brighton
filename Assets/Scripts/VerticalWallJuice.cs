@@ -4,22 +4,43 @@ using UnityEngine;
 
 public class VerticalWallJuice : MonoBehaviour {
 
-    public float speed = 1.0f;
-    public float intensity = 1.0f;
-    Vector2 initialPos;
+    public float shakeDuration = 0f;
+    public float shakeAmount = 0.7f;
+    public float decreaseFactor = 1.0f;
+    public Transform wall;
+    Vector3 initialPos;
 
-    void start()
+
+    void Awake()
     {
-        initialPos = transform.position;
+        if (wall == null)
+            wall = GetComponent(typeof(Transform)) as Transform;
     }
 
-    void OnCollisionEnter2D(Collision2D col)
+    void Start()
     {
-        if(col.gameObject.tag == "Ball")
-        {
-            Debug.Log("Hit Vertical Wall");
-            Vector2 juicePos = new Vector2(transform.position.x = Mathf.Sin(Time.time * speed), transform.position.y);
+        initialPos = transform.localPosition;
+    }
 
+   void Update()
+    {
+        if (shakeDuration > 0)
+        {
+            wall.localPosition = initialPos + Random.insideUnitSphere * shakeAmount;
+
+            shakeDuration -= Time.deltaTime * decreaseFactor;
         }
+        else
+        {
+            shakeDuration = 0f;
+            wall.localPosition = initialPos;
+        }
+    }
+
+    public void GetJuicy()
+    {
+        shakeDuration = 0.3f;
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.Play();
     }
 }

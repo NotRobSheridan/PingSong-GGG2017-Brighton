@@ -9,19 +9,33 @@ public class GameControllerScript : MonoBehaviour {
     public static int playerTwoScore = 0;
     public Text playerOneText;
     public Text playerTwoText;
+    public int maxScore = 10;
+    public InputField textEntry;
     Transform ball;
+    public Canvas startCanvas;
 
-	// Use this for initialization
-	void Start () {
 
+    // Use this for initialization
+    void Start () {
+        Time.timeScale = 0.0f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
     
-                playerOneText.text = playerOneScore.ToString();
-                playerTwoText.text = playerTwoScore.ToString();
+        playerOneText.text = playerOneScore.ToString();
+        playerTwoText.text = playerTwoScore.ToString();
+        if (playerOneScore >= maxScore || playerTwoScore >= maxScore)
+            Time.timeScale = 0.0f;//TODO: EndGame();
     }
+
+    public void StartGame()
+    {
+        maxScore = int.Parse(textEntry.text);
+        Time.timeScale = 1.0f;
+        startCanvas.GetComponent<Canvas>().enabled = false;
+    }
+
     public void UpdatePlayerOneScore()
     {
         playerOneScore++;
