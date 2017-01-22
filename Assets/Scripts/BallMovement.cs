@@ -9,8 +9,6 @@ public class BallMovement : MonoBehaviour
     public Rigidbody2D rb;
     public GameObject gameControllerScript;
     public GameObject cameraScript;
-    public static int playerOneScore;
-    public static int playerTwoScore;
     public Color initialColor;
     public Color secondColor;
     public bool switchColor;
@@ -18,6 +16,10 @@ public class BallMovement : MonoBehaviour
     public Color initialBallColor;
     public Color ballHitColor;
     public GameObject mainLight;
+    public GameObject thisBall;
+    public bool multiBall = true;
+
+    public ParticleSystem wallHit;
 
     Vector3 previousLoc = Vector3.zero;
     Vector3 currentVelocity;
@@ -27,10 +29,17 @@ public class BallMovement : MonoBehaviour
     GameObject juice;
     Vector3 initialPos;
 
-    //Audio Soures
 
     float maxFlickerSpeed = 0.1f;
-    float minFlickerSpeed = 1.0f;
+    float minFlickerSpeed = 0.5f;
+
+    void Start()
+    {
+        ParticleSystem wall = wallHit.GetComponent<ParticleSystem>();
+        var wallEemit = wall.emission;
+        wallEemit.enabled = true;
+
+    }
 
     void Update()
     {
@@ -81,12 +90,26 @@ public class BallMovement : MonoBehaviour
 
         if (col.gameObject.name == "BottomWall")
         {
+            StartCoroutine(FlickerLights());
             gameControllerScript.GetComponent<GameControllerScript>().UpdatePlayerTwoScore();
+            ParticleEmit();
+            bool isMultiple = GameControllerScript.playerTwoScore % 10 == 0;
+            if (multiBall && isMultiple && GameControllerScript.playerTwoScore > 0)
+            {
+                Instantiate(thisBall);
+            }
+
         }
         if (col.gameObject.name == "TopWall")
         {
+            StartCoroutine(FlickerLights());
             gameControllerScript.GetComponent<GameControllerScript>().UpdatePlayerOneScore();
-            Debug.Log("Top Wall Hit");
+            ParticleEmit();
+            bool isMultiple = GameControllerScript.playerOneScore % 10 == 0;
+            if (multiBall && isMultiple && GameControllerScript.playerOneScore > 0)
+            {
+                Instantiate(thisBall);
+            }
         }
 
         if (col.gameObject.name == "PaddleBottom")
@@ -107,7 +130,9 @@ public class BallMovement : MonoBehaviour
 
         if (col.gameObject.tag == "Wall")
         {
-           col.gameObject.GetComponent<VerticalWallJuice>().GetJuicy();
+            
+            col.gameObject.GetComponent<VerticalWallJuice>().GetJuicy();
+
         }
 
 
@@ -121,15 +146,11 @@ public class BallMovement : MonoBehaviour
         if (visualiserTimer >= 1)
         {
             AudioSource audio = GetComponent<AudioSource>();
+            audio.pitch = (Random.Range(0.6f, 1.5f));
             audio.Play();
 
             if (col.gameObject.tag == "Visualiser")
             {
-                int randomNum;
-                randomNum = Random.Range(0, 10);
-                if (randomNum <= 2)
-                    StartCoroutine(FlickerLights());
-
                 rend = col.GetComponent<MeshRenderer>();
                 if (switchColor)
                 {
@@ -158,13 +179,6 @@ public class BallMovement : MonoBehaviour
                 visualiserTimer = 0;
             }
         }
-
-
-        if (col.gameObject.name == "BottomWall")
-        {
-            Debug.Log("Visualiser Hit. Length is: " + col.transform.localScale.y);
-            //StartCoroutine(VisualiserHit());
-        }
     }
 
     IEnumerator VisualiserHit(Collider2D col)
@@ -190,5 +204,17 @@ public class BallMovement : MonoBehaviour
         flickerLight.enabled = true;
         yield return new WaitForSeconds (Random.Range(minFlickerSpeed, maxFlickerSpeed));
 
+    }
+
+    void ParticleEmit()
+    {
+        ParticleSystem wall = wallHit.GetComponent<ParticleSystem>();
+        wall.Play();
+
+    }
+
+    public void MultiBallSwitch()
+    {
+        multiBall = !multiBall;
     }
 }
