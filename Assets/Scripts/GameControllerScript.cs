@@ -17,6 +17,12 @@ public class GameControllerScript : MonoBehaviour {
     public Canvas endCanvas;
     public Text winnerText;
     public Light mainLight, visualiserLight;
+    public AudioClip score;
+    public AudioClip win;
+    public AudioSource audio;
+    public bool gameFinished = false;
+    public bool playWinSound;
+
 
 
     // Use this for initialization
@@ -27,6 +33,9 @@ public class GameControllerScript : MonoBehaviour {
         playerTwoScore = 0;
         visualiserLight.GetComponent<Light>().enabled = false;
         mainLight.GetComponent<Light>().enabled = false;
+        AudioSource audio = GetComponent<AudioSource>();
+        gameFinished = false;
+        playWinSound = true;
 
 
     }
@@ -36,17 +45,7 @@ public class GameControllerScript : MonoBehaviour {
     
         playerOneText.text = playerOneScore.ToString();
         playerTwoText.text = playerTwoScore.ToString();
-        if (playerOneScore >= maxScore || playerTwoScore >= maxScore)
-        {
-            Time.timeScale = 0.0f;//TODO: EndGame();
-            visualiserLight.GetComponent<Light>().enabled = false;
-            mainLight.GetComponent<Light>().enabled = false;
-            endCanvas.GetComponent<Canvas>().enabled = true;
-            if (playerOneScore > playerTwoScore)
-                winnerText.text = "Player 1 Wins";
-            else
-                winnerText.text = "Player 2 Wins";
-        }
+        WinGame();
 
     }
 
@@ -68,15 +67,54 @@ public class GameControllerScript : MonoBehaviour {
 
     public void UpdatePlayerOneScore()
     {
-        playerOneScore++;
+        if (gameFinished == false)
+        {
+            playerOneScore++;
+            audio.pitch = (Random.Range(0.6f, 1.5f));
+            audio.PlayOneShot(score);
+            StartCoroutine(GetJuicy());
+        }
+
     }
     public void UpdatePlayerTwoScore()
     {
-        playerTwoScore++;
-        Debug.Log("Player 2 Score Updated" + playerTwoScore.ToString());
-        StartCoroutine(GetJuicy());
+        if (gameFinished == false)
+        {
+            playerOneScore++;
+            audio.pitch = (Random.Range(0.6f, 1.5f));
+            audio.PlayOneShot(score);
+            StartCoroutine(GetJuicy());
+        }
 
     }
+
+    public void WinGame()
+    {
+        playerOneText.text = playerOneScore.ToString();
+        playerTwoText.text = playerTwoScore.ToString();
+
+        if (playerOneScore >= maxScore || playerTwoScore >= maxScore)
+        {
+            gameFinished = true;
+
+            Time.timeScale = 0.0f;//TODO: EndGame();
+            visualiserLight.GetComponent<Light>().enabled = false;
+            mainLight.GetComponent<Light>().enabled = false;
+            endCanvas.GetComponent<Canvas>().enabled = true;
+            if (playWinSound)
+            {
+                audio.pitch = Random.Range(0.9f, 1.1f);
+                audio.PlayOneShot(win);
+            }
+            playWinSound = false;
+            if (playerOneScore > playerTwoScore)
+                winnerText.text = "Player 1 Wins";
+            else
+                winnerText.text = "Player 2 Wins";
+        }
+
+    }
+
 
     public void EndGame()
     {

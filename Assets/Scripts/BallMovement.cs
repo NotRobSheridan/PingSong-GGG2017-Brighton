@@ -38,6 +38,8 @@ public class BallMovement : MonoBehaviour
         ParticleSystem wall = wallHit.GetComponent<ParticleSystem>();
         var wallEemit = wall.emission;
         wallEemit.enabled = true;
+        gameObject.transform.position = new Vector3(0, 0, 0);
+
 
     }
 

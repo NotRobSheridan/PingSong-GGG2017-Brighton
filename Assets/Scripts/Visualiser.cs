@@ -9,6 +9,7 @@ public class Visualiser : MonoBehaviour {
     public float sizeBias;
     public Color firstColor;
     public Color secondColor;
+    public GameObject micListener;
 
     float randomAmplitude = 1.0f;
     Vector3 startScale;
@@ -31,6 +32,7 @@ public class Visualiser : MonoBehaviour {
             packagedData += System.Math.Abs(info[i]);
         }
 
-        transform.localScale = new Vector3(startScale.x, (packagedData * amplitude * randomAmplitude) + startScale.y * sizeBias, startScale.z);
+        float micInput = MicListenerScript.MicLoudness;
+        transform.localScale = new Vector3(startScale.x, (packagedData * amplitude * randomAmplitude) + startScale.y * sizeBias + (micInput * 2), startScale.z);
 	}
 }
