@@ -23,8 +23,6 @@ public class GameControllerScript : MonoBehaviour {
     public bool gameFinished = false;
     public bool playWinSound;
 
-
-
     // Use this for initialization
     void Start () {
         Time.timeScale = 0.0f;
@@ -36,8 +34,6 @@ public class GameControllerScript : MonoBehaviour {
         AudioSource audio = GetComponent<AudioSource>();
         gameFinished = false;
         playWinSound = true;
-
-
     }
 
     // Update is called once per frame
@@ -80,7 +76,7 @@ public class GameControllerScript : MonoBehaviour {
     {
         if (gameFinished == false)
         {
-            playerOneScore++;
+            playerTwoScore++;
             audio.pitch = (Random.Range(0.6f, 1.5f));
             audio.PlayOneShot(score);
             StartCoroutine(GetJuicy());

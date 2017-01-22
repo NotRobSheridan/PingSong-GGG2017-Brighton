@@ -32,7 +32,6 @@ public class Visualiser : MonoBehaviour {
             packagedData += System.Math.Abs(info[i]);
         }
 
-        float micInput = MicListenerScript.MicLoudness;
-        transform.localScale = new Vector3(startScale.x, (packagedData * amplitude * randomAmplitude) + startScale.y * sizeBias + (micInput * 2), startScale.z);
+        transform.localScale = new Vector3(startScale.x, (packagedData * amplitude * randomAmplitude) + startScale.y * sizeBias, startScale.z);
 	}
 }
