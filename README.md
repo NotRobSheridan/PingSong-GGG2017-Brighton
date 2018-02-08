@@ -1,5 +1,5 @@
 # PingSong-GGG2017-Brighton
-Global Game Jam 16 Project
+Global Game Jam 17 Project
 
 Released under Attribution-Noncommercial-Share Alike 3.0 version of the Creative Commons License.
 https://creativecommons.org/licenses/by-nc-sa/3.0/
